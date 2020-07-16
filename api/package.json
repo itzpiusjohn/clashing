@@ -1,9 +1,9 @@
 {
-  "name": "travel-one-api",
+  "name": "nodejs-api",
   "version": "0.0.1",
   "main": "app.js",
   "scripts": {
-    "start": "cross-env NODE_PATH=. NODE_ENV=development run-p nodemon lint:fix:watch",
+    "start": "cross-env NODE_PATH=. NODE_ENV=development run-p lint:fix:watch nodemon",
     "nodemon": "nodemon app.js --ignore node_modules -w .",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",

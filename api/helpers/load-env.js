@@ -1,7 +1,5 @@
 'use strict';
 
-const dotenv = require('dotenv');
-
 /**
  * @type {boolean}
  * make sure that dotenv.config() is done only once
@@ -9,11 +7,13 @@ const dotenv = require('dotenv');
  */
 let init;
 
+const debug = (process.env.NODE_ENV || 'development') == 'development';
+
 module.exports = () => {
 	if (!init) {
-		dotenv.config(
+		require('dotenv').config(
 			{
-				debug: process.env.NODE_ENV == 'development',
+				debug: debug,
 			},
 		);
 		init = true;
