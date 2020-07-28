@@ -7,9 +7,13 @@ require('helpers/load-env')();
 const http = require('http');
 const express = require('express');
 const boot = require('helpers/boot');
-const apiIndex = require('routes/index');
 const log = require('helpers/logger');
 const db = require('helpers/db');
+
+// Aoolication routes
+const apiIndex = require('routes/index');
+const authRoutes = require('routes/auth');
+const usersRoutes = require('routes/users');
 
 db.connect(
 	(err) => {
@@ -26,8 +30,10 @@ db.connect(
 		// Setup app middlewares and routes
 		boot(app);
 
-		// Default routes
+		// Application routes
 		app.use('/', apiIndex);
+		app.use('/auth', authRoutes);
+		app.use('/users', usersRoutes);
 
 		const server = http.createServer(app);
 
@@ -43,5 +49,4 @@ db.connect(
 
 
 // TODO: Tests that app mounts
-// TODO: Add health check route
 // TODO: Defer database closing

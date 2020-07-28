@@ -13,7 +13,7 @@ const log = require('helpers/logger');
  */
 const router = new express.Router();
 
-const pwdRegx = /^\+([1-9]{1,3})([-. ]{1,})?([1-9]{1})?([0-9]{1,2})?([-. ]{1,})?([0-9]{1,3})([-. ]{1,})?([0-9]{4})$/;
+const mobileNumberRegex = /^\+([1-9]{1,3})([-. ]{1,})?([1-9]{1})?([0-9]{1,2})?([-. ]{1,})?([0-9]{1,3})([-. ]{1,})?([0-9]{4})$/;
 
 router.post(
 	'/register',
@@ -41,7 +41,7 @@ router.post(
 								(e, r) => {
 									if (e) {
 										log.error(e);
-										reject(e);
+										reject(new Error('Email address verification failed.'));
 										return;
 									}
 
@@ -59,8 +59,8 @@ router.post(
 			),
 		body('mobile_number')
 			.exists()
-			.withMessage('M   obile number is required.')
-			.matches(pwdRegx)
+			.withMessage('Mobile number is required.')
+			.matches(mobileNumberRegex)
 			.withMessage('Mobile number should look like +12234567890')
 			.custom(
 				(value) => {
@@ -74,7 +74,7 @@ router.post(
 								(e, r) => {
 									if (e) {
 										log.error(e);
-										reject(e);
+										reject(new Error('Mobile number verification failed.'));
 										return;
 									}
 
@@ -94,7 +94,7 @@ router.post(
 			.isLength({min: 5})
 			.withMessage('Password the password must contain at least 5 characters.'),
 	],
-	function(req, res) {
+	(req, res) => {
 		const validationErrors = validationResult(req);
 
 		if (!validationErrors.isEmpty()) {
