@@ -25,3 +25,5 @@ rules:
     - error
   no-tabs:
     -	off
+  max-len:
+    - off
