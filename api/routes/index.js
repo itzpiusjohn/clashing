@@ -1,12 +1,11 @@
 'use strict';
 
 const express = require('express');
+const usersRoutes = require('routes/users');
 
 /**
  * Express router to mount default functions.
  * @type {express.Router}
- * @const
- * @namespace usersRouter
  */
 const router = new express.Router();
 
@@ -24,6 +23,7 @@ const index = (req, res, next) => {
 };
 
 router.get('/', index);
+router.use('/users', usersRoutes);
 
 module.exports = router;
 
