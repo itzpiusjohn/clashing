@@ -1,0 +1,50 @@
+{
+  "name": "nodejs-api",
+  "version": "0.0.1",
+  "main": "app.js",
+  "scripts": {
+    "start": "cross-env NODE_PATH=. NODE_ENV=development run-p lint:fix:watch nodemon",
+    "nodemon": "nodemon app.js --ignore node_modules -w .",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "lint:fix:watch": "onchange '**/*.js' -- npm run lint:fix",
+    "migrate:create": "cross-env NODE_PATH=. knex migrate:make",
+    "migrate:reset": "cross-env NODE_PATH=. knex migrate:rollback --all",
+    "migrate:rollback": "cross-env NODE_PATH=. knex migrate:rollback",
+    "migrate:up": "cross-env NODE_PATH=. knex migrate:up",
+    "migrate:down": "cross-env NODE_PATH=. knex migrate:down",
+    "migrate:list": "cross-env NODE_PATH=. knex migrate:list",
+    "pretest": "cross-env NODE_PATH=. NODE_ENV=testing npm run migrate:reset && NODE_PATH=. NODE_ENV=testing npm run migrate:up",
+    "test": "cross-env NODE_PATH=. NODE_ENV=testing jest"
+  },
+  "author": {
+    "name": "Princewill Chiaka",
+    "email": "9r1nc3w1ll@gmail.com"
+  },
+  "contributors": [],
+  "license": "SEE LICENSE IN license.md",
+  "private": true,
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "cross-env": "^7.0.2",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-validator": "^6.6.0",
+    "helmet": "^3.23.3",
+    "jsonwebtoken": "^8.5.1",
+    "knex": "^0.21.2",
+    "morgan": "^1.10.0",
+    "mysql": "^2.18.1",
+    "npm-run-all": "^4.1.5",
+    "objection": "^2.2.1",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "eslint": "^7.4.0",
+    "eslint-config-google": "^0.14.0",
+    "jest": "^26.1.0",
+    "nodemon": "^2.0.4",
+    "onchange": "^7.0.2",
+    "sqlite3": "^5.0.0"
+  }
+}
