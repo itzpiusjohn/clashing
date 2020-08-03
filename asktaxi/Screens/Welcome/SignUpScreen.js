@@ -43,34 +43,7 @@ const SignUpScreen = ({navigation}) =>{
       });
     }
   }
-  // const textInputChange = (val) =>{
-  //   if(val.length !== 0){
-  //     setData({
-  //       ...data,
-  //       email:val,
-  //       check_textInputChange:true
-  //     })
-  //   }else{
-  //     setData({
-  //       ...data,
-  //       email:val,
-  //       check_textInputChange:false
-  //     });
-  //   }
-  // }
 
-  // const handleChangePassword = (val)=>{
-  //   setData({
-  //     ...data,
-  //     comfirm_password:val
-  //   });
-  // }
-  // const handleComfirmChangePassword = (val)=>{
-  //   setData({
-  //     ...data,
-  //     password:val
-  //   });
-  // }
   const handleChangePassword = (val)=>{
     if(val.trim().length >= 8){
        setData({
@@ -220,39 +193,6 @@ const SignUpScreen = ({navigation}) =>{
                <Text style= {styles.errorMsg}>Password must be atleast 8 characters long</Text>
             </Animatable.View>
              }
-             {/* <View style ={{marginTop:35}}> */}
-               {/* <Text style={styles.text_footer}>Comfirm Password</Text>
-             </View>
-             
-             <View style={styles.action}>
-               <Feather
-               name="lock"
-               color="#bbdefb"
-               size={20}
-               />
-               <TextInput
-               placeholder="Comfirm Your Password"
-               secureTextEntry={data.comfrim_secureTextEntry ? true: false}
-               style={styles.textInput}
-               autoCapitalize="none"
-               onChangeText={(val)=> handleComfirmChangePassword(val)}
-               />
-               <TouchableOpacity onPress = {comfirm_updateSecureTextEntry}>
-                 {data.comfrim_secureTextEntry?
-                 <Feather
-                name="eye-off"
-                color="grey"
-                size={20}
-               />
-               :
-               <Feather
-               name="eye"
-               color="red"
-               size={20}
-              />
-                 }
-               </TouchableOpacity>
-             </View> */}
              <View style={styles.button}>
                <TouchableOpacity 
                 style={[styles.signIn, {

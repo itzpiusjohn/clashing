@@ -7,7 +7,6 @@ import * as Animatable from 'react-native-animatable';
 
 const {width, height} = Dimensions.get('window');
 
-
 const SignInScreen = ({navigation}) =>{
   const [data, setData] = useState({
     email:'',
@@ -54,41 +53,12 @@ const SignInScreen = ({navigation}) =>{
     }
    
   }
-  const updateSecureTextEntry = () =>{
-   
+  const updateSecureTextEntry = () =>{   
     setData({
       ...data,
       secureTextEntry: !data.secureTextEntry
     });
   }
-  const handleIsValidUser =(val) =>{
-    let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    if(re.test(val)) {
-      setData({
-         ...data,
-         isValidUser: true
-      });
-    }else{
-      setData({
-        ...data,
-        isValidUser:false
-      })
-    }
-  }
-      // const loginHandle = (email, password) =>{
-      //   const foundUser = Users.filter(item =>{
-      //     return userName = item.username && password == item.password;
-      //   });
-      //   if(data.username.length ==0 || data.password.length ==0){
-      //     Alert.alert('wrong input!', 'username or password field cannot be empty.',[{text:'Okay'}]);
-      //     return;
-      //   }
-      //   if (foundUser.length==0){
-      //     Alert.alert('Invalid User!', 'Username or password is incorrect',[{text: 'Okay'}]);
-      //     return
-      //   }
-      //   signIn(foundUser);
-      // }
 
     return(
         <View style={styles.container}>
