@@ -8,7 +8,6 @@ import {
   TextInput,
   StatusBar,
   ScrollView,
-  KeyboardAvoidingView,
 } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import * as Animatable from 'react-native-animatable';
@@ -17,7 +16,6 @@ import axios from 'axios';
 import baseUrl from './baseUrl';
 
 axios.defaults.baseURL = baseUrl;
-
 
 const SignUpScreen = ({navigation}) => {
   const [data, setData] = useState({
@@ -29,17 +27,18 @@ const SignUpScreen = ({navigation}) => {
     new_text: false,
     secureTextEntry: true,
     isValidUser: true,
-    isValidPassWord: true,
+    isValidPassword: true,
     isValidPhone: true,
     isValidName: true,
-    newErrorMsg:'',
-    token:'',
+    newErrorMsg: '',
+    token: '',
     isErrorMessage: false,
+    pressed: false
   });
-/**
- * handles the email inputs, check if email entry is valid.
- * @param {string} val 
- */
+  /**
+   * handles the email inputs, check if email entry is valid.
+   * @param {string} val
+   */
   const textInputChange = (val) => {
     let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (re.test(val)) {
@@ -60,7 +59,7 @@ const SignUpScreen = ({navigation}) => {
   };
   /**
    * handles phone no. inputs check if entry is valid
-   * @param {string} val 
+   * @param {string} val
    */
   const phoneInputChange = (val) => {
     let re = /^\+([1-9]{1,3})([-. ]{1,})?([1-9]{1})?([0-9]{1,2})?([-. ]{1,})?([0-9]{1,3})([-. ]{1,})?([0-9]{4})$/;
@@ -82,7 +81,7 @@ const SignUpScreen = ({navigation}) => {
   };
   /**
    * Checks if password meets requirements.
-   * @param {string} val 
+   * @param {string} val
    */
   const handleChangePassword = (val) => {
     if (val.trim().length >= 8) {
@@ -95,7 +94,7 @@ const SignUpScreen = ({navigation}) => {
       setData({
         ...data,
         password: val,
-        check_textInputChange: false,
+       // check_textInputChange: false,
         isValidPassword: false,
       });
     }
@@ -108,7 +107,7 @@ const SignUpScreen = ({navigation}) => {
   };
   /**
    * Check for valid name entry.
-   * @param {string} val 
+   * @param {string} val
    */
   const textNameChange = (val) => {
     if (val.trim().length >= 3) {
@@ -127,24 +126,35 @@ const SignUpScreen = ({navigation}) => {
       });
     }
   };
-/**
- *Handles the signUp onPress Action.
- * @param {string}
- */
-   async function handleSignUp () {
+  /**
+   *Handles the signUp onPress Action.
+   * @param {string}
+   */
+  async function handleSignUp({navigation}) {
     try {
-     const {name , email, mobile_number, password} = data;
-     const result = await axios.post("/users/register", {name,email,mobile_number,password})
-     setData({ token: result.data.token})
-     if(result.data.staus == 200){
-      return navigation.navigate('UserLocationSelection')}
+      const {name, email, mobile_number, password} = data;
+      const result = await axios.post('/users/register', {
+        name,
+        email,
+        mobile_number,
+        password,
+      }); 
+      setData({token: result.data.token});
+        return navigation.navigate('UserLocationSelection');
     } catch (error) {
-      setData({...data, newErrorMsg: error.result.data.message, isErrorMessage: true});
+      setData({...data, newErrorMsg: error.response.data.message ,
+         isErrorMessage: true});
     }
     setData({isErrorMessage: false});
+    if(!data.pressed){
+      setData({
+        ...data,
+        pressed: true
+      })
+    }
   }
   return (
-    <KeyboardAvoidingView
+    <View
       behavior="padding"
       keyboardVerticalOffset={50}
       style={styles.container}>
@@ -167,6 +177,11 @@ const SignUpScreen = ({navigation}) => {
               value={data.name}
             />
           </View>
+          {data.isValidName ? null : (
+            <View>
+              <Text style={styles.errorMsg}>This field is required</Text>
+            </View>
+          )}
           <View style={{marginTop: 35}}>
             <Text style={styles.text_footer}>PHONE</Text>
           </View>
@@ -180,11 +195,11 @@ const SignUpScreen = ({navigation}) => {
             />
           </View>
           {data.isValidPhone ? null : (
-            <Animatable.View animation="fadeInLeft" duration={500}>
+            <View>
               <Text style={styles.errorMsg}>
                 phone must be of the format +166900009875
               </Text>
-            </Animatable.View>
+            </View>
           )}
           <View style={{marginTop: 35}}>
             <Text style={styles.text_footer}>EMAIL</Text>
@@ -203,11 +218,11 @@ const SignUpScreen = ({navigation}) => {
             ) : null}
           </View>
           {data.isValidUser ? null : (
-            <Animatable.View animation="fadeInLeft" duration={500}>
+            <View>
               <Text style={styles.errorMsg}>
                 Email must of the format user@mail.com
               </Text>
-            </Animatable.View>
+            </View>
           )}
           <View style={{marginTop: 35}}>
             <Text style={styles.text_footer}>PASSWORD</Text>
@@ -220,7 +235,7 @@ const SignUpScreen = ({navigation}) => {
               onChangeText={(val) => handleChangePassword(val)}
               value={data.password}
             />
-            <View style={{position: 'absolute', paddingLeft: 320}}>
+            <View style={{position: 'absolute', right: 20}}>
               <TouchableOpacity onPress={updateSecureTextEntry}>
                 {data.secureTextEntry ? (
                   <Feather name="eye-off" color="grey" size={20} />
@@ -231,16 +246,16 @@ const SignUpScreen = ({navigation}) => {
             </View>
           </View>
           {data.isValidPassword ? null : (
-            <Animatable.View animation="fadeInLeft" duration={500}>
+            <View>
               <Text style={styles.errorMsg}>
-                Password must be atleast 8 characters.
+                Enter a valid password of atleast 8 characters
               </Text>
-             
-            </Animatable.View>
+            </View>
           )}
-           {data.isErrorMessage ? (
-          <Text style={styles.errorMsg}>{data.newErrorMsg.toString()}</Text>
-        ) : null}
+
+          {data.isErrorMessage ? (
+            <Text style={styles.errorMsg}>{data.newErrorMsg.toString()}</Text>
+          ) : null}
           <View style={styles.button}>
             <TouchableOpacity
               style={[
@@ -253,7 +268,7 @@ const SignUpScreen = ({navigation}) => {
               ]}
               onPress={handleSignUp}>
               <View style={styles.signIn}>
-                <Text style={[styles.textSign, {color: '#fff'}]}>Continue</Text>               
+                <Text style={[styles.textSign, {color: '#fff'}]}>Continue</Text>
               </View>
             </TouchableOpacity>
 
@@ -268,12 +283,11 @@ const SignUpScreen = ({navigation}) => {
                 },
               ]}>
               <Text style={[styles.textSign, {color: '#fff'}]}>Sign In</Text>
-            </TouchableOpacity>               
+            </TouchableOpacity>
           </View>
-        
         </Animatable.View>
       </ScrollView>
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 
@@ -283,13 +297,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
   },
   header: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: 20,
+    paddingTop: 100,
   },
   footer: {
     flex: 2,
@@ -298,6 +313,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 30,
     paddingHorizontal: 20,
     paddingVertical: 30,
+    paddingBottom: 100,
   },
   text_header: {
     color: '#3F4A58',
@@ -315,15 +331,11 @@ const styles = StyleSheet.create({
   action: {
     flexDirection: 'row',
     marginTop: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f2f2f2',
     paddingBottom: 5,
   },
   actionError: {
     flexDirection: 'row',
     marginTop: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#FF0000',
     paddingBottom: 5,
   },
   textInput: {
@@ -333,7 +345,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: -12,
     paddingLeft: 20,
-    paddingRight: 10,
+    paddingRight: 20,
     paddingBottom: 10,
     color: '#05375a',
     borderRadius: 20,
