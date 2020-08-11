@@ -3,7 +3,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import SignInScreen from './SignInScreen';
 import SignUpScreen from './SignUpScreen';
 import SplashScreen from './SplashScreen';
-import UserLocationSelection from './UserLocationSelection';
+import Location from './Location';
 
 const RootStack = createStackNavigator();
 
@@ -12,7 +12,7 @@ const RootStackScreen = ({navigation}) => (
     <RootStack.Screen name="SplashScreen" component={SplashScreen}/>
     <RootStack.Screen name="SignInScreen" component={SignInScreen}/>
     <RootStack.Screen name="SignUpScreen" component={SignUpScreen}/>
-    <RootStack.Screen name='UserLocationSelection' component={UserLocationSelection}/>
+    <RootStack.Screen name='Location' component={Location}/>
 </RootStack.Navigator>
 )
 export default RootStackScreen;

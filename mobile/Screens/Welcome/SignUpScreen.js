@@ -140,7 +140,7 @@ const SignUpScreen = ({navigation}) => {
         password,
       }); 
       setData({token: result.data.token});
-        return navigation.navigate('UserLocationSelection');
+        return navigation.navigate('Location');
     } catch (error) {
       setData({...data, newErrorMsg: error.response.data.message ,
          isErrorMessage: true});

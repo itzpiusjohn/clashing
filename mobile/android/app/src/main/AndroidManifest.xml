@@ -15,7 +15,7 @@
         android:label="@string/app_name"
         android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode"
         android:launchMode="singleTask"
-        android:windowSoftInputMode="adjustResize">
+        android:windowSoftInputMode="adjustPan">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
@@ -25,10 +25,9 @@
       <meta-data
      android:name="com.google.android.geo.API_KEY"
      android:value="AIzaSyDuI5LrWm8LkzM5UEOHtzoYQDLKKQ3pWOw"/>
-     <uses-library android:name="org.apache.http.legacy" android:required="false"/>
-     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+     <uses-library android:name="org.apache.http.legacy" android:required="false"/>    
     </application>
-
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+      <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
 </manifest>

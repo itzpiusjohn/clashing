@@ -98,7 +98,7 @@ const SignInScreen = ({navigation}) => {
       const {mobile_number, password} = data;
       const result = await axios.post('/auth/login', {mobile_number, password});
       setData({token: result.data.token});
-      return navigation.navigate('UserLocationSelection');
+      return navigation.navigate('Location');
     } catch (error) {
       setData({...data, newErrorMsg: error
         , isErrorMessage: true});
