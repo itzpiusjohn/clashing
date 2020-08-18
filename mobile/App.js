@@ -6,9 +6,10 @@ import Location from './Screens/Welcome/Location';
 
 const App = () =>{
   return(
-    <NavigationContainer>
-      <RootStackScreen/>
-    </NavigationContainer>
+    // <NavigationContainer>
+    //   <RootStackScreen/>
+    // </NavigationContainer>
+    <Location/>
   );
 }
 export default App;

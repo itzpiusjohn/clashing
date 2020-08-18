@@ -4,6 +4,8 @@ import SignInScreen from './SignInScreen';
 import SignUpScreen from './SignUpScreen';
 import SplashScreen from './SplashScreen';
 import Location from './Location';
+import Booking from './Booking';
+
 
 const RootStack = createStackNavigator();
 
@@ -13,6 +15,7 @@ const RootStackScreen = ({navigation}) => (
     <RootStack.Screen name="SignInScreen" component={SignInScreen}/>
     <RootStack.Screen name="SignUpScreen" component={SignUpScreen}/>
     <RootStack.Screen name='Location' component={Location}/>
+    <RootStack.Screen name="Booking" component = {Booking}/>
 </RootStack.Navigator>
 )
 export default RootStackScreen;
