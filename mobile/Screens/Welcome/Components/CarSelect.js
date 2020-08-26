@@ -2,10 +2,8 @@ import React, {Component} from 'react';
 import {
   Text,
   View,
-  ScrollView,
   Image,
   StyleSheet,
-  TouchableOpacity,
   TouchableHighlight,
 } from 'react-native';
 import {CheckBox} from 'native-base';
@@ -14,8 +12,9 @@ export class CarSelect extends Component {
     return (
       <View style={styles.container}>
         <TouchableHighlight
+        activeOpacity={0}
         onPress = {this.props.onPress}
-          underlayColor="#ccc"
+          underlayColor="#ddd"
           style={{flex: 1, justifyContent: 'center'}}>
           <View style={{flex: 1, justifyContent: 'center'}}>
             <View style={{flex: 2}}>
@@ -24,7 +23,7 @@ export class CarSelect extends Component {
             <View style={styles.holder}>
               <Text
                 style={{
-                  fontSize: 18,
+                  fontSize: 15,
                   fontWeight: '700',
                   paddingBottom: 5,
                   marginLeft: 30,
@@ -32,16 +31,20 @@ export class CarSelect extends Component {
                 {this.props.name}
               </Text>
               <View style={{flex: 1, paddingLeft: 30}}>
-                <Text>Price:{this.props.price}</Text>
+                <Text style={{fontSize:14, fontWeight:'600'}}>Price:{this.props.price}</Text>
                 <CheckBox
                   checked={this.props.checked}
                   onPress={this.props.onPress}
                   color="#1152FD"
                   style={{
-                    marginLeft: 70,
-                    marginBottom: 190,
+                    position:'absolute',
+                    top:0,
+                    left:0,
+                    right:0,
+                    marginLeft: 90,
+                    marginBottom: 150,
                     borderRadius: 10,
-                    marginRight: 90,
+                    marginRight: 100,
                     borderColor: '#ccc',
                   }}
                 />
@@ -54,10 +57,11 @@ export class CarSelect extends Component {
   }
 }
 
+
 const styles = StyleSheet.create({
   container: {
     height: 166,
-    width: 150,
+    width: 124,
     marginLeft: 21,
     marginBottom: 190,
     marginTop: 27,
