@@ -8,16 +8,10 @@ import {
   Keyboard,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from 'react-native';
 import MapView, {Polyline, Marker, Callout} from 'react-native-maps';
-import {
-  InputGroup,
-  Input,
-  Left,
-  List,
-  ListItem,
-  Body,
-} from 'native-base';
+import {InputGroup, Input, Left, List, ListItem, Body} from 'native-base';
 import placesApi from './apiKey';
 import PolyLine from '@mapbox/polyline';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -25,6 +19,7 @@ import _ from 'lodash';
 const mapStyle = require('./mapstyles.json');
 import FabStyles from './FabStyles';
 import CarSelect from './Components/CarSelect';
+import Booking from './Booking';
 
 //variable declarations
 let pickId;
@@ -61,6 +56,7 @@ export default class Location extends Component {
       timeValue: '',
       lat: 0,
       long: 0,
+      isPayment:false
     };
   }
   componentDidMount() {
@@ -100,7 +96,20 @@ export default class Location extends Component {
       Keyboard.dismiss();
       this.map.fitToSuppliedMarkers(['mk1', 'mk2']);
     } catch (err) {
-      console.error(err);
+      Alert.alert('Something Went', err,  [
+        {
+          text: 'OK',
+          onPress: () =>
+            this.setState({
+              predictions: [],
+              pointChords: [],
+              lat:0,
+              long: 0
+            }),
+        },
+      ],
+
+      {cancelable: false},);
     }
   }
 
@@ -115,7 +124,6 @@ export default class Location extends Component {
     const apiDistanceCall = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=place_id:${origin}&destinations=place_id:${destination}&key=${placesApi}`;
     const response = await fetch(apiDistanceCall);
     const json = await response.json();
-    console.log(json);
     if (pickId && dropId) {
       this.setState({
         time: json.rows[0].elements[0].duration.value,
@@ -131,7 +139,25 @@ export default class Location extends Component {
       const result = await fetch(apiUrl);
       const json = await result.json();
       this.setState({predictions: json.predictions});
-    } catch (erro) {
+    } catch (error) {
+      Alert.alert(
+        'Ivalid address',
+        err,
+        [
+          {
+            text: 'OK',
+            onPress: () =>
+              this.setState({
+                predictions: [],
+                pickUp: '',
+                dropOff: '',
+                isUpdate: false,
+              }),
+          },
+        ],
+
+        {cancelable: false},
+      );
       console.log(error);
     }
   }
@@ -174,6 +200,14 @@ export default class Location extends Component {
       this.setState({isUpdate: true, predictions: []});
     }
   }
+  paymentScreen(){
+    if(this.state.isSelect1 || this.state.isSelect2 || this.state.isSelect)
+    this.setState({
+      isPayment:true,
+    })
+    else
+    return Alert.alert("Select Ride", "please select a ride type")
+  }  
 
   render() {
     let left = 268 / 2 + 5.25;
@@ -301,6 +335,8 @@ export default class Location extends Component {
                   isSelect: false,
                   isSelect1: false,
                   isSelect2: false,
+                  isPayment:false,
+                  
                 });
               }}
               size={24}
@@ -335,6 +371,24 @@ export default class Location extends Component {
             />
           </View>
         )}
+        
+        {this.state.isPayment ?
+        <View
+        style={{
+          marginBottom:757,
+          marginTop:35,
+          marginRight:69,
+          marginLeft:69,
+          position:'absolute',
+          left:69,
+          top:35
+        }}
+        >
+          <Text style={{fontWeight:'700'}}>Payment Methods</Text>
+        </View>
+        :
+        null
+      }
         {!this.state.isUpdate ? (
           <View style={styles.footer}>
             <View style={styles.main}>
@@ -453,93 +507,97 @@ export default class Location extends Component {
           </View>
         ) : null}
         {this.state.isUpdate && this.state.pointChords.length > 1 ? (
-        
-            <View style={styles.buttonConatainer}>
-              <ScrollView
-                showsHorizontalScrollIndicator={false}
-                style={{
-                  marginLeft: 21,
-                  marginTop: 10,
-                  marginRight: 21,
-                  height: 250,
-                }}
-                horizontal={true}>
-                <CarSelect
-                  imageUri={require('../../asset/economy.jpeg')}
-                  name="Economy"
-                  onPress={() =>
-                    this.setState({
-                      isSelect: !this.state.isSelect,
-                      isSelect1: false,
-                      isSelect2: false,
-                    })
-                  }
-                  checked={this.state.isSelect}
-                  price={fare}
-                />
-                <CarSelect
-                  imageUri={require('../../asset/VipClass.jpeg')}
-                  name="Vip Ride"
-                  price={fare}
-                  checked={this.state.isSelect1}
-                  onPress={() =>
-                    this.setState({
-                      isSelect1: !this.state.isSelect1,
-                      isSelect: false,
-                      isSelect2: false,
-                    })
-                  }
-                />
-                <CarSelect
-                  imageUri={require('../../asset/vanRide.jpeg')}
-                  name="Van"
-                  price={fare}
-                  checked={this.state.isSelect2}
-                  onPress={() =>
-                    this.setState({
-                      isSelect2: !this.state.isSelect2,
-                      isSelect: false,
-                      isSelect1: false,
-                    })
-                  }
-                />
-              </ScrollView>
-              <View style={styles.estimate}>
-                <Text style={{fontSize: 13, alignItems: 'center'}}>
-                  Estimated Time: {this.state.timeValue}
-                </Text>
-              </View>
-              <View
-                style={{
-                  marginRight: 21,
-                  marginLeft: 21,
-                  marginBottom: 34,
-                  marginTop: 219,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  top: 0,
-
-                  position: 'absolute',
-                }}>
-                <TouchableOpacity
-                  onPress={() =>
-                    this.props.navigation.navigate('BookingScreen')
-                  }
-                  activeOpacity={0.5}
-                  style={[
-                    styles.signIn,
-                    {
-                      borderColor: '#0d47a1',
-                      borderWidth: 1,
-                      marginTop: 30,
-                    },
-                  ]}>
-                  <Text style={FabStyles.btnText}>Book</Text>
-                </TouchableOpacity>
-              </View>
+          <View style={styles.buttonConatainer}>
+            <ScrollView
+              showsHorizontalScrollIndicator={false}
+              style={{
+                marginLeft: 21,
+                marginTop: 10,
+                marginRight: 21,
+                height: 250,
+              }}
+              horizontal={true}>
+              <CarSelect
+                imageUri={require('../../asset/economy.jpeg')}
+                name="Economy"
+                onPress={() =>
+                  this.setState({
+                    isSelect: !this.state.isSelect,
+                    isSelect1: false,
+                    isSelect2: false,
+                  })
+                }
+                checked={this.state.isSelect}
+                price={fare}
+              />
+              <CarSelect
+                imageUri={require('../../asset/VipClass.jpeg')}
+                name="Vip Ride"
+                price={fare}
+                checked={this.state.isSelect1}
+                onPress={() =>
+                  this.setState({
+                    isSelect1: !this.state.isSelect1,
+                    isSelect: false,
+                    isSelect2: false,
+                  })
+                }
+              />
+              <CarSelect
+                imageUri={require('../../asset/vanRide.jpeg')}
+                name="Van"
+                price={fare}
+                checked={this.state.isSelect2}
+                onPress={() =>
+                  this.setState({
+                    isSelect2: !this.state.isSelect2,
+                    isSelect: false,
+                    isSelect1: false,
+                  })
+                }
+              />
+            </ScrollView>
+            <View style={styles.estimate}>
+              <Text style={{fontSize: 13, alignItems: 'center'}}>
+                Estimated Time: {this.state.timeValue}
+              </Text>
             </View>
-        ) : null}
+            <View
+              style={{
+                marginRight: 21,
+                marginLeft: 21,
+                marginBottom: 34,
+                marginTop: 219,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                top: 0,
+
+                position: 'absolute',
+              }}>
+              <TouchableOpacity
+                onPress={() => this.paymentScreen() }
+                activeOpacity={0.2}
+                style={[
+                  styles.signIn,
+                  {
+                    borderColor: '#0d47a1',
+                    borderWidth: 1,
+                    marginTop: 30,
+                  },
+                ]}>
+                <Text style={FabStyles.btnText}>Book</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        ) : null} 
+        {
+        this.state.isPayment ?
+        <View style={styles.buttonConatainer}>
+          <Booking price={fare} time = {this.state.timeValue}/>
+        </View>
+          : null
+        }
       </View>
     );
   }
@@ -680,10 +738,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   buttonConatainer: {
-    position:'absolute',
-    top:0,
-    right:0,
-    bottom:0,
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     width: '100%',
@@ -693,8 +751,8 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: 2},
     shadowRadius: 6,
     elevation: 2,
-    marginTop: height/2, 
-    marginBottom:60,
+    marginTop: height / 2,
+    marginBottom: 60,
   },
   estimate: {
     position: 'absolute',

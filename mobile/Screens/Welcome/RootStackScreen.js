@@ -1,12 +1,8 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import SignInScreen from './SignInScreen';
-import SignUpScreen from './SignUpScreen';
-import SplashScreen from './SplashScreen';
 import Location from './Location';
 import BookingScreen from './BookingScreen';
 import {
-  ProfileScreen,
   Support,
   Promocode,
   Signout,
@@ -14,7 +10,8 @@ import {
 } from './Drawer/ProfileScreen';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {DrawerContent} from './Drawer/DrawerContent';
-import Profile from './Profile'
+import Profile from './Profile';
+import Booking from'./Booking';
 
 const RootStack = createStackNavigator();
 
@@ -27,6 +24,9 @@ const RootStackScreen = ({navigation}) => (
     <Drawer.Screen name="Promocode" component={Promocode} />
     <Drawer.Screen name="Sign-out" component={Signout}/>
     <Drawer.Screen name="Support" component={Support}/>
+    <Drawer.Screen name="Booking" component={Booking}/>
+    <Drawer.Screen name="BookingScreen" component={BookingScreen}/>
+
   </Drawer.Navigator>
 );
 

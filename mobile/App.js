@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import RootStack from './Screens/Welcome/RootStackScreen';
 import {NavigationContainer} from '@react-navigation/native';
-import Location from './Screens/Welcome/Location';
+import Booking from './Screens/Welcome/Booking';
 import RootStackScreen from './Screens/Welcome/RootStackScreen';
 import {createStore, combineReducers} from 'redux';
 import stateReducer from './Store/reducers/reducers';
@@ -23,7 +23,7 @@ export default class App extends Component {
           <RootStackScreen />
         </NavigationContainer>
       </Provider>
-      // <Location/>
+      // <Booking/>
     );
   }
 }
