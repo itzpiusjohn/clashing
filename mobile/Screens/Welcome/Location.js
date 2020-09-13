@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  StatusBar,
 } from 'react-native';
 import MapView, {Polyline, Marker, Callout} from 'react-native-maps';
 import {InputGroup, Input, Left, List, ListItem, Body} from 'native-base';
@@ -20,10 +21,11 @@ const mapStyle = require('./mapstyles.json');
 import FabStyles from './FabStyles';
 import CarSelect from './Components/CarSelect';
 import Booking from './Booking';
-
+import * as Animatable from 'react-native-animatable';
 //variable declarations
 let pickId;
 let dropId;
+let rideSelectd;
 const {height, width} = Dimensions.get('window');
 
 export default class Location extends Component {
@@ -56,7 +58,10 @@ export default class Location extends Component {
       timeValue: '',
       lat: 0,
       long: 0,
-      isPayment:false
+      isPayment: false,
+      car: null,
+      type: '',
+      discription: '',
     };
   }
   componentDidMount() {
@@ -96,20 +101,24 @@ export default class Location extends Component {
       Keyboard.dismiss();
       this.map.fitToSuppliedMarkers(['mk1', 'mk2']);
     } catch (err) {
-      Alert.alert('Something Went', err,  [
-        {
-          text: 'OK',
-          onPress: () =>
-            this.setState({
-              predictions: [],
-              pointChords: [],
-              lat:0,
-              long: 0
-            }),
-        },
-      ],
+      Alert.alert(
+        'Something Went',
+        err,
+        [
+          {
+            text: 'OK',
+            onPress: () =>
+              this.setState({
+                predictions: [],
+                pointChords: [],
+                lat: 0,
+                long: 0,
+              }),
+          },
+        ],
 
-      {cancelable: false},);
+        {cancelable: false},
+      );
     }
   }
 
@@ -155,7 +164,6 @@ export default class Location extends Component {
               }),
           },
         ],
-
         {cancelable: false},
       );
       console.log(error);
@@ -200,14 +208,15 @@ export default class Location extends Component {
       this.setState({isUpdate: true, predictions: []});
     }
   }
-  paymentScreen(){
-    if(this.state.isSelect1 || this.state.isSelect2 || this.state.isSelect)
-    this.setState({
-      isPayment:true,
-    })
-    else
-    return Alert.alert("Select Ride", "please select a ride type")
-  }  
+  paymentScreen() {
+    if (this.state.isSelect1 || this.state.isSelect2 || this.state.isSelect)
+      this.setState({
+        isPayment: true,
+      });
+    else return Alert.alert('Select Ride', 'please select a ride type');
+  }
+
+  selectedRide() {}
 
   render() {
     let left = 268 / 2 + 5.25;
@@ -255,12 +264,14 @@ export default class Location extends Component {
             image={require('../../asset/ic_pick.png')}
             title={this.state.pickUp}
             identifier={'mk1'}
+            style={{height: 50, width: 50}}
           />
           <Marker
             coordinate={{latitude: this.state.lat, longitude: this.state.long}}
             image={require('../../asset/flag.png')}
             title={this.state.dropOff}
             identifier={'mk2'}
+            style={{height: 50, width: 80}}
           />
         </View>
       );
@@ -269,11 +280,13 @@ export default class Location extends Component {
     const predictions = this.state.predictions;
     return (
       <View style={styles.container} keyboardVerticalOffset={20}>
+        <StatusBar backgroundColor="#ddd" barStyle="dark-content" />
         <MapView
           provider={MapView.PROVIDER_GOOGLE}
           style={styles.map}
           showsUserLocation={true}
           customMapStyle={mapStyle}
+          loadingEnabled={true}
           ref={(ref) => {
             this.map = ref;
           }}
@@ -305,13 +318,13 @@ export default class Location extends Component {
         {this.state.isUpdate ? (
           <View
             style={{
-              marginLeft: 40,
+              marginLeft: 30,
               marginRight: 327,
               marginTop: 30,
               marginBottom: 740,
-              borderWidth: 0.2,
-              borderColor: '#ccc',
-              backgroundColor: '#fff',
+              borderWidth: 0.4,
+              borderColor: '#333',
+              backgroundColor: '#edf2f4',
               borderRadius: 15,
               height: 30,
               width: 30,
@@ -322,25 +335,39 @@ export default class Location extends Component {
               top: 0,
               left: 0,
             }}>
-            <Icon
-              name="arrow-back"
-              onPress={() => {
-                pickId = null;
-                dropId = null;
-                this.setState({
-                  isUpdate: false,
-                  pickUp: '',
-                  dropOff: '',
-                  pointChords: [],
-                  isSelect: false,
-                  isSelect1: false,
-                  isSelect2: false,
-                  isPayment:false,
-                  
-                });
-              }}
-              size={24}
-            />
+            {!this.state.isPayment ? (
+              <Icon
+                name="arrow-back"
+                onPress={() => {
+                  pickId = null;
+                  dropId = null;
+                  this.setState({
+                    isUpdate: false,
+                    pickUp: '',
+                    dropOff: '',
+                    pointChords: [],
+                    isSelect: false,
+                    isSelect1: false,
+                    isSelect2: false,
+                    isPayment: false,
+                  });
+                }}
+                size={24}
+              />
+            ) : (
+              <Icon
+                name="close"
+                onPress={() => {
+                  this.setState({
+                    isUpdate: true,
+                    isPayment: false,
+                  });
+                }}
+                size={24}
+                color="#d62828"
+                style={{justifyContent: 'center', alignItems: 'center'}}
+              />
+            )}
           </View>
         ) : (
           <View
@@ -371,24 +398,24 @@ export default class Location extends Component {
             />
           </View>
         )}
-        
-        {this.state.isPayment ?
-        <View
-        style={{
-          marginBottom:757,
-          marginTop:35,
-          marginRight:69,
-          marginLeft:69,
-          position:'absolute',
-          left:69,
-          top:35
-        }}
-        >
-          <Text style={{fontWeight:'700'}}>Payment Methods</Text>
-        </View>
-        :
-        null
-      }
+        {this.state.isPayment ? (
+          <View
+            style={{
+              marginBottom: 757,
+              marginTop: 35,
+              marginRight: 69,
+              marginLeft: 59,
+              position: 'absolute',
+              left: 59,
+              top: 35,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Text style={{fontWeight: 'bold', fontSize: 23}}>
+              Comfirm Selection
+            </Text>
+          </View>
+        ) : null}
         {!this.state.isUpdate ? (
           <View style={styles.footer}>
             <View style={styles.main}>
@@ -474,12 +501,13 @@ export default class Location extends Component {
                 }}>
                 <List
                   dataArray={predictions}
-                  key={(item) => item.id}
+                  key={predictions.id}
                   keyExtractor={(item) => item.id}
                   renderRow={(item) => (
                     <ListItem
                       button
                       avatar
+                      key={item}
                       onPress={() =>
                         this.getSelectedValues(
                           item.place_id,
@@ -491,11 +519,11 @@ export default class Location extends Component {
                           <Icon style={styles.leftIcon} name="location-on" />
                         </Left>
                         <Body>
-                          <Text style={styles.primaryText}>
-                            {item.structured_formatting.main_text}
+                          <Text  key={item.id} style={styles.primaryText}>
+                            {item.structured_formatting.main_text}                          
                           </Text>
-                          <Text style={styles.secondaryText}>
-                            {item.description}
+                          <Text key={item.id} style={styles.secondaryText}>
+                            {item.description}                          
                           </Text>
                         </Body>
                       </View>
@@ -507,7 +535,10 @@ export default class Location extends Component {
           </View>
         ) : null}
         {this.state.isUpdate && this.state.pointChords.length > 1 ? (
-          <View style={styles.buttonConatainer}>
+          <Animatable.View
+            duration={1500}
+            animation="fadeInUp"
+            style={styles.buttonConatainer}>
             <ScrollView
               showsHorizontalScrollIndicator={false}
               style={{
@@ -525,6 +556,8 @@ export default class Location extends Component {
                     isSelect: !this.state.isSelect,
                     isSelect1: false,
                     isSelect2: false,
+                    car: require('../../asset/economy.jpeg'),
+                    type: 'Economy',
                   })
                 }
                 checked={this.state.isSelect}
@@ -540,6 +573,8 @@ export default class Location extends Component {
                     isSelect1: !this.state.isSelect1,
                     isSelect: false,
                     isSelect2: false,
+                    car: require('../../asset/VipClass.jpeg'),
+                    type: 'Vip Ride',
                   })
                 }
               />
@@ -553,6 +588,8 @@ export default class Location extends Component {
                     isSelect2: !this.state.isSelect2,
                     isSelect: false,
                     isSelect1: false,
+                    car: require('../../asset/vanRide.jpeg'),
+                    type: 'Van',
                   })
                 }
               />
@@ -566,17 +603,16 @@ export default class Location extends Component {
               style={{
                 marginRight: 21,
                 marginLeft: 21,
-                marginBottom: 34,
-                marginTop: 219,
+                marginBottom: 24,
+                marginTop: 239,
                 left: 0,
                 right: 0,
                 bottom: 0,
                 top: 0,
-
                 position: 'absolute',
               }}>
               <TouchableOpacity
-                onPress={() => this.paymentScreen() }
+                onPress={() => this.paymentScreen()}
                 activeOpacity={0.2}
                 style={[
                   styles.signIn,
@@ -589,15 +625,32 @@ export default class Location extends Component {
                 <Text style={FabStyles.btnText}>Book</Text>
               </TouchableOpacity>
             </View>
-          </View>
-        ) : null} 
-        {
-        this.state.isPayment ?
-        <View style={styles.buttonConatainer}>
-          <Booking price={fare} time = {this.state.timeValue}/>
-        </View>
-          : null
-        }
+          </Animatable.View>
+        ) : null}
+        {this.state.isPayment ? (
+          <Animatable.View
+            animation="fadeInLeft"
+            style={styles.buttonConatainer}>
+            <Booking
+              type={this.state.type}
+              Image={this.state.car}
+              price={fare}
+              time={this.state.timeValue}
+              onPress={
+                () => {this.props.navigation.navigate('SelectPayment',
+                {                
+                 type: this.state.type,
+                 cost: fare,
+                 pick: this.state.pickUp,
+                 drop: this.state.dropOff,
+                 discription: this.state.discription,
+                });
+                }
+              }
+              onChangeText={(text) => this.setState({discription:text})}
+            />
+          </Animatable.View>
+        ) : null}
       </View>
     );
   }
@@ -733,10 +786,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: '#1152fd',
   },
-  textSign: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
   buttonConatainer: {
     position: 'absolute',
     top: 0,
@@ -752,20 +801,19 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     elevation: 2,
     marginTop: height / 2,
-    marginBottom: 60,
   },
   estimate: {
     position: 'absolute',
     left: 40,
-    marginLeft: 40,
-    marginRight: 180,
+    marginLeft: 10,
+    marginRight: 170,
     marginBottom: 118,
     marginTop: 215,
-    width: 160,
     height: 37,
     borderWidth: 0.2,
     borderColor: '#ccc',
     fontWeight: 'normal',
     color: '#97ADB6',
+    marginTop: 210,
   },
 });

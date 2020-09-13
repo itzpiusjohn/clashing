@@ -17,7 +17,7 @@ export class CarSelect extends Component {
           underlayColor="#ddd"
           style={{flex: 1, justifyContent: 'center'}}>
           <View style={{flex: 1, justifyContent: 'center'}}>
-            <View style={{flex: 2}}>
+            <View style={{flex: 2, overflow:'hidden'}}>
               <Image source={this.props.imageUri} style={styles.imageStyle} />
             </View>
             <View style={styles.holder}>
@@ -60,7 +60,6 @@ export class CarSelect extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    height: 166,
     width: 124,
     marginLeft: 21,
     marginBottom: 190,
@@ -69,8 +68,11 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 10,
     borderBottomStartRadius: 10,
     borderBottomEndRadius: 10,
-    borderWidth: 0.2,
+    borderWidth: 0.4,
     borderColor: '#ccc',
+    backgroundColor:'#F7F7F7',
+    height:150
+    
   },
   imageStyle: {
     flex: 1,
@@ -78,6 +80,7 @@ const styles = StyleSheet.create({
     height: null,
     resizeMode: 'center',
     overflow: 'hidden',
+    
   },
   holder: {
     flex: 1,

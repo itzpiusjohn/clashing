@@ -1,29 +1,19 @@
 import React, {Component} from 'react';
-import RootStack from './Screens/Welcome/RootStackScreen';
 import {NavigationContainer} from '@react-navigation/native';
-import Booking from './Screens/Welcome/Booking';
 import RootStackScreen from './Screens/Welcome/RootStackScreen';
-import {createStore, combineReducers} from 'redux';
-import stateReducer from './Store/reducers/reducers';
 import {Provider} from 'react-redux';
+import configureStore from './Store/store';
 
 
-const rootReducer = combineReducers({
-  access: stateReducer,
-});
-const store = createStore(rootReducer);
-
-
-
+const store = configureStore();
 export default class App extends Component {
   render() {
-    return (
+    return ( 
       <Provider store={store}>
         <NavigationContainer>
           <RootStackScreen />
-        </NavigationContainer>
+        </NavigationContainer>  
       </Provider>
-      // <Booking/>
-    );
+    );    
   }
 }

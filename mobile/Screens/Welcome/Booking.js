@@ -7,102 +7,40 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
+  Dimensions
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icons from 'react-native-vector-icons/FontAwesome5';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+const {height, width} = Dimensions.get('window');
+
 
 export default class Booking extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.textHeader}>BOOKING</Text>
-        </View>
-        <View
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            flexDirection: 'row',
-            position: 'absolute',
-            left: 0,
-            top: 0,
-            marginTop: 192,
-            marginBottom: 580,
-            marginHorizontal: 40,
-            paddingLeft: 20,
-            height: 40,
-            paddingBottom: 20,
-          }}>
-          <Image
-            style={{height: 20, width: 20}}
-            source={require('../../asset/ic_pick.png')}
-          />
-          <Text
-            style={{
-              paddingLeft: 20,
-              fontWeight: '200',
-              fontSize: 25,
-            }}>
-            pick up
-          </Text>
-        </View>
-        <View
-          style={{
-            marginLeft: 67,
-            marginRight: 80,
-            marginTop: 240,
-            marginBottom: 400,
-            borderWidth: 0.2,
-            backgroundColor: '#fff',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-          }}>
-          <Icon color="#1152FD" name="long-arrow-down" size={27} />
-        </View>
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            position: 'absolute',
-            left: 0,
-            top: 0,
-            alignItems: 'center',
-            right: 0,
-            marginTop: 262,
-            marginBottom: 570,
-            marginHorizontal: 40,
-            paddingLeft: 20,
-            height: 40,
-            paddingTop: 20,
-          }}>
-          <Image
-            style={{height: 20, width: 20}}
-            source={require('../../asset/flag.png')}
-          />
-          <Text
-            style={{
-              paddingLeft: 20,
-              fontWeight: '200',
-              fontSize: 25,
-            }}>
-            drop Off
-          </Text>
-        </View>
         <ScrollView style={styles.discriptio}>
           <View style={styles.carHolder}>
             <View style={styles.fleet}>
-              <Image source={this.props.Image} />
+              <Image
+                style={{
+                  flex: 1,
+                  width: null,
+                  height: null,
+                  resizeMode: 'center',
+                  overflow: 'hidden',
+                }}
+                source={this.props.Image}
+              />
             </View>
             <View style={styles.fleetText}>
               <Text
                 style={{color: '#3E4958', fontSize: 15, textAlign: 'center'}}>
-               {this.props.type}
+                {this.props.type}
               </Text>
             </View>
             <View style={styles.time}>
-              <Text style={{color: '#FFF', fontSize: 15, fontWeight:'700'}}>
+              <Text style={{color: '#FFF', fontSize: 15, fontWeight: '400'}}>
                 {this.props.time}
               </Text>
             </View>
@@ -126,49 +64,32 @@ export default class Booking extends Component {
                 borderBottomRightRadius: 15,
                 borderTopRightRadius: 30,
                 borderBottomLeftRadius: 10,
-                borderColor:'#ddd'
+                borderColor: '#ddd',
               }}
               multiline={true}
-              placeholder="Enter some more information about your location..."
-              value={this.props.discription}
+              placeholder="more details about your destination..."
+              onChangeText ={this.props.onChangeText}
+
             />
           </View>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => this.props.navigation.navigate('BookingScreen')}>
-          <View style={styles.payments}>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={this.props.onPress}>
+            <View style={styles.payments}>
               <Text>Continue To Payment</Text>
-            <View
-              style={{
-                position: 'absolute',
-                left: 0,
-                right: '68%',
-                top: 0,
-                bottom: 0,
-                width: 90,
-                height: 24,
-                borderRadius: 5,
-                borderColor: '#fff',
-                borderWidth: 0.5,
-                marginRight: 110,
-                marginLeft: 200,
-                justifyContent: 'space-evenly',
-                alignItems: 'center',
-                marginVertical: 15,
-                flex: 1,
-                flexDirection: 'row',
-              }}>
-              <Image source={require('../../asset/icon_mastercard.png')} />
-              <Icons
-                style={{paddingHorizontal: 10}}
-                name="wallet"
-                color="blue"
-              />
-              <Icon name="paypal" style={{paddingRight: 10}} color="blue" />
-              <Icon name="money" color="blue" />
+              <View
+                style={styles.imageCan}>
+                <Image source={require('../../asset/icon_mastercard.png')} />
+                <Icons
+                  style={{paddingHorizontal: 10}}
+                  name="wallet"
+                  color="blue"
+                />
+                <Icon name="paypal" style={{paddingRight: 10}} color="blue" />
+                <Icon name="money" color="blue" />
+              </View>
+              <MaterialIcons name="navigate-next" color="blue" size={20} />
             </View>
-            <MaterialIcons name="navigate-next" color="blue" size={20} />
-          </View>
           </TouchableOpacity>
         </ScrollView>
       </View>
@@ -182,21 +103,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#f0efeb',
-  },
-  header: {
-    position: 'absolute',
-    top: 35,
-    left: 0,
-    marginBottom: 757,
-    marginTop: 20,
-    marginRight: 69,
-    marginLeft: 69,
-    width: 237,
-  },
-  textHeader: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
   },
   carHolder: {
     height: 100,
@@ -214,7 +120,7 @@ const styles = StyleSheet.create({
   },
   discriptio: {
     width: '100%',
-    marginTop: 470,
+    marginBottom:44,
     position: 'absolute',
     left: 0,
     right: 0,
@@ -235,7 +141,6 @@ const styles = StyleSheet.create({
     marginBottom: 37,
     marginLeft: 12,
     marginRight: 231,
-    backgroundColor: '#ddd',
   },
   fleetText: {
     flex: 1,
@@ -248,7 +153,7 @@ const styles = StyleSheet.create({
     marginTop: 70,
     marginBottom: 15,
     marginRight: 219,
-    backgroundColor: '#ccc',
+    
   },
   time: {
     flex: 1,
@@ -262,7 +167,6 @@ const styles = StyleSheet.create({
     marginRight: 31,
     marginLeft: 251,
     borderRadius: 25,
-    backgroundColor: '#D5DDE0',
   },
   price: {
     flex: 1,
@@ -310,4 +214,23 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     padding: 10,
   },
+  imageCan:{
+    position: 'absolute',
+    left: 0,
+    right: '68%',
+    top: 0,
+    bottom: 0,
+    width: 90,
+    height: 24,
+    borderRadius: 5,
+    borderColor: '#fff',
+    borderWidth: 0.5,
+    marginRight: 110,
+    marginLeft: 200,
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    marginVertical: 15,
+    flex: 1,
+    flexDirection: 'row',
+  }
 });

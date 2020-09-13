@@ -4,12 +4,11 @@ import {DrawerContentScrollView, DrawerItem} from '@react-navigation/drawer';
 import {
   Avatar,
   Title,
-  Drawer,
   TouchableRipple,
-  Switch,
   Text,
   Caption,
 } from 'react-native-paper';
+
 
 export function DrawerContent(props) {
   return (
@@ -47,12 +46,12 @@ export function DrawerContent(props) {
             </View>
           </TouchableRipple>
         </View>
-        <TouchableRipple style={{flex: 1, position: 'absolute'}}>
+        <View style={{flex: 1, position: 'absolute'}}>
           <View style={styles.textStyle}>
             <Text style={{fontWeight: 'bold', fontSize: 13, color: '#3E4958'}}>
-              {' '}
               RIDE HISTORY
             </Text>
+            <TouchableRipple rippleColor="#fff" onPress={() => props.navigation.navigate('Payments')}>
             <Text
               style={{
                 fontWeight: 'bold',
@@ -62,6 +61,8 @@ export function DrawerContent(props) {
               }}>
               PAYMENTS
             </Text>
+            </TouchableRipple>
+           
             <Text
               style={{
                 fontWeight: 'bold',
@@ -69,7 +70,7 @@ export function DrawerContent(props) {
                 paddingTop: 50,
                 color: '#3E4958',
               }}>
-              PROMO CODE
+              SETTINGS
             </Text>
             <Text
               style={{
@@ -81,7 +82,7 @@ export function DrawerContent(props) {
               SUPPORT
             </Text>
           </View>
-        </TouchableRipple>
+        </View>
       </DrawerContentScrollView>
     </View>
   );

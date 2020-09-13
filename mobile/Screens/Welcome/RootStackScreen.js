@@ -1,17 +1,19 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import Location from './Location';
-import BookingScreen from './BookingScreen';
+import SelectPayment from './SelectPayment';
 import {
   Support,
   Promocode,
   Signout,
-  Payement,
 } from './Drawer/ProfileScreen';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {DrawerContent} from './Drawer/DrawerContent';
 import Profile from './Profile';
 import Booking from'./Booking';
+import Payments from '../Welcome/Components/Payments';
+import PaymentsMethods from '../Welcome/Components/PaymentsMethods';
+
 
 const RootStack = createStackNavigator();
 
@@ -20,13 +22,13 @@ const RootStackScreen = ({navigation}) => (
   <Drawer.Navigator initialRouteName="Home" drawerContent = {props => <DrawerContent {...props}/>}>
     <Drawer.Screen name="Home" component={Location}/>
     <Drawer.Screen name="Profile" component={Profile}/>
-    <Drawer.Screen name="Payement" component={Payement}/>
+    <Drawer.Screen name="Payments" component={Payments}/>
     <Drawer.Screen name="Promocode" component={Promocode} />
     <Drawer.Screen name="Sign-out" component={Signout}/>
     <Drawer.Screen name="Support" component={Support}/>
     <Drawer.Screen name="Booking" component={Booking}/>
-    <Drawer.Screen name="BookingScreen" component={BookingScreen}/>
-
+    <Drawer.Screen name="SelectPayment" component={SelectPayment}/>
+    <Drawer.Screen name = "PaymentMethods" component={PaymentsMethods}/>
   </Drawer.Navigator>
 );
 
